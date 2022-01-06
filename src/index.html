@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Audric Three.js</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript" src="../build/dat.gui.js"></script>
+
+    <!-- <h1>test de h1</h1>
+    <script src="three.js"></script>
+    <script type="module" src="GLTFLoader.js"></script>
+    <script type="module">
+        // import * as THREE from 'three';
+
+        import { GLTFLoader } from "/GLTFLoader.js"
+        //scene
+        // const scene = new THREE.Scene();
+        // const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // const renderer = new THREE.WebGLRenderer();
+        // renderer.setSize(window.innerWidth, window.innerHeight);
+        // document.body.appendChild(renderer.domElement);
+        // Instantiate a loader
+        var scene = new THREE.Scene()
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        var loader = new GLTFLoader();
+        var obj;
+
+        loader.load('/model/Audric/Audric1.gltf', function (gltf) {
+            obj = gltf.scene
+            scene.add(gltf.scene);
+
+        }, undefined, function (error) {
+
+            console.error(error);
+
+        });
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        scene.add(directionalLight);
+        scene.background = new THREE.Color(0xffffff)
+        var light = new THREE.HemisphereLight(0xffffff, 0x00000, 10)
+        scene.add(light);
+        camera.position.set(0, 10, 100)
+        console.log(scene)
+
+    </script> -->
+    <script src="three.js"></script>
+    <script type="module" src="GLTFLoader.js"></script>
+    <script type="module">
+        var gui = new dat.gui.GUI();
+        import { OrbitControls } from "./three/examples/jsm/controls/OrbitControls";
+        import { GLTFLoader } from "./GLTFLoader.js";
+
+        var scene = new THREE.Scene();
+
+        var camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.01,
+            1000
+        );
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var loader = new GLTFLoader();
+        const pointLight = new THREE.PointLight(0xfdf3c6, 2)
+        pointLight.position.set(1.15, 0, 0)
+        pointLight.intensity = 4.1
+        scene.add(pointLight)
+        gui.add(pointLight.position, "x").min(-6).max(6).step(0.01)
+        gui.add(pointLight.position, "y").min(-3).max(3).step(0.01)
+        gui.add(pointLight.position, "z").min(-3).max(3).step(0.01)
+        gui.add(pointLight, 'intensity').min(0).max(10).step(0.01)
+        const pointLightHelper = new THREE.PointLightHelper(pointLight, 1)
+        scene.add(pointLightHelper)
+
+        const directionnalLight = new THREE.DirectionalLight(0xffffff, 2)
+        directionnalLight.position.set(0, 10, 5)
+        directionnalLight.intensity = 1
+        // scene.add(directionnalLight)
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.update();
+        var obj;
+        loader.load("./model/Audric/Audric.glb", function (gltf) {
+            obj = gltf.scene;
+            scene.add(gltf.scene);
+        });
+        scene.background = new THREE.Color(0xffffff);
+        var light = new THREE.HemisphereLight(0xffffff, 0x000000, 10);
+        // scene.add(light);
+        camera.position.set(0, 0, 2);
+        function animate() {
+            requestAnimationFrame(animate);
+            // obj.rotation.y += 0.01;
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+    </script>
+
+</body>
+
+</html>
